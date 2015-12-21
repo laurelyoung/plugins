@@ -20,6 +20,9 @@
         $('.btn').on('click', function () {
             $('#container').SliderBar({
                 barWidth: 600,
+                barClassName: 'bar-2',
+                completedClassName: 'completed-2',
+                sliderClassName: 'slider-2',
                 onChanging: function (percentage) {
                     $('#percentage').text((percentage * 100).toFixed(2) + '%');
                 },
