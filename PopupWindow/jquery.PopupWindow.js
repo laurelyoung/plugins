@@ -6,146 +6,94 @@
  * 3.创建弹出框标题和弹出框内容,添加到弹出框内
  * Created by laurel on 15/12/19.
  */
-function PopupWindow(title, content, width, height, needAnimate, func) {
-    title = title || '弹出框标题';
-    content = content || '弹出框内容';
-    width = width || 350;
-    height = height || 180;
-    needAnimate = needAnimate || false;
-
-    // 添加遮罩层
-    var mask = $('<div></div>');
-    mask.appendTo(document.body);
-    mask.css({
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,.4)'
-    });
-
-    // 创建弹出框
-    var popupWindowBox = $('<div id="PopupWindow"></div>');
-    popupWindowBox.appendTo(document.body);
-
-    // 设置弹出框的样式
-    popupWindowBox.css({
-        width: width,
-        height: height,
-        overflow: 'hidden',
-        borderRadius: 4,
-        backgroundColor: '#fff',
-        position: 'fixed',
-        top: 150,
-        left: '50%',
-        transform: 'translate(-50%)',
-        boxShadow: '0 2px 5px rgba(0,0,0,.5)'
-    });
-
-    // 创建弹出框标题
-    var popupWindowTitleBox = $('<h1></h1>');
-    popupWindowTitleBox.appendTo(popupWindowBox);// 标题框添加到弹出框内部
-    popupWindowTitleBox.text(title);
-    popupWindowTitleBox.css({
-        color: '#fff',
-        fontSize: 20,
-        padding: '8px 10px',
-        textAlign: 'center',
-        backgroundColor: '#f60',
-        borderBottom: '1px solid #ccc'
-    });
+;(function ($) {
+    var PopupWindow = function PopupWindow(element, options) {
+        // 默认参数
+        this.defaults = {
+            renderTo: $(document.body),
+            classNames: {
+                maskClassName: 'mask',
+                popupWindowClassName: 'popupWindow',
+                popupWindowTitleClassName: 'popupWindowTitle',
+                popupWindowContentClassName: 'popupWindowContent',
+                okBtnClassName: 'okBtn',
+                cancelBtnClassName: 'cancelBtn'
+            },
+            title: '标题',    // 纯文本或者html
+            content: '正文',  // 纯文本或者html
+            animate: false,
+            okEvent: function () {
+            }
+        };
+        this.settings = $.extend(true, {}, this.defaults, options);
+        this.element = element;
+    };
 
 
-    // 创建弹出框内容
-    var popupWindowContentBox = $('<p></p>');
-    popupWindowContentBox.appendTo(popupWindowBox);// 内容框添加到弹出框内部
+    PopupWindow.prototype = {
+        init: function () {
+            this.settings.renderTo = $.type(this.settings.renderTo) == 'string' ? $(this.settings.renderTo) : this.settings.renderTo;// 转化为jQuery对象
+            // 创建遮罩层
+            var mask = $('<div></div>').addClass(this.settings.maskClassName).appendTo(this.settings.renderTo);
+            // 创建弹出框
+            var popupWindow = $('<div></div>').addClass(this.settings.classNames.popupWindowClassName).appendTo(this.settings.renderTo);
+            // 创建弹出框标题
+            var popupWindowTitle = $('<h1></h1>').html(this.settings.title).addClass(this.settings.classNames.popupWindowTitleClassName).appendTo(popupWindow);
+            // 创建弹出框正文
+            var popupWindowContent = $('<div></div>').html('<p>' + this.settings.content + '</p>').addClass(this.settings.classNames.popupWindowContentClassName).appendTo(popupWindow);
+            // 创建确定和取消按钮
+            var okBtn = $('<button></button>').addClass(this.settings.classNames.okBtnClassName).text('确 定').appendTo(popupWindowContent);
+            var cancelBtn = $('<button></button>').addClass(this.settings.classNames.cancelBtnClassName).text('取 消').appendTo(popupWindowContent);
 
-    var infoBox = $('<p></p>');
-    infoBox.text(content);
-    infoBox.css({
-        marginTop: 10,
-        marginBottom: 30
-    });
-    infoBox.appendTo(popupWindowContentBox);
+            // 初始化按钮事件
+            this.initEvent(okBtn, cancelBtn, mask, popupWindow);
+        },
 
-    popupWindowContentBox.css({
-        fontSize: 14,
-        lineHeight: 1.428,
-        textAlign: 'center',
-        paddingTop: 15
-    });
+        // 删除弹出框
+        removePopupWindow: function (mask, popupWindow) {
+            // 弹出框动画退出
+            popupWindow.animate({
+                top: -1 * popupWindow.height() - 10
+            }, 300, 'easeOutQuad');
+            // 遮罩层动画退出
+            mask.animate({
+                opacity: 0
+            }, 300, 'easeInCubic', function () {
+                // 删除弹出框
+                popupWindow.remove();
+                // 删除遮罩层
+                mask.remove();
+            });
+        },
 
-    /**
-     * 弹出框退出页面,并删除自身
-     */
-    function removePopupWindow() {
-        popupWindowBox.animate({// 弹出框动画退出
-            top: -1 * height - 10
-        }, 300, 'easeOutQuad');
-        mask.animate({// 遮罩层动画退出
-            opacity: 0
-        }, 300, 'easeInCubic', function () {
-            popupWindowBox.remove();// 删除弹出框
-            mask.remove();// 删除遮罩层
-        });
-    }
+        initEvent: function (okBtn, cancelBtn, mask, popupWindow) {
+            var me = this;
+            okBtn.on('click', function () {
+                me.removePopupWindow(mask, popupWindow);
+                me.settings.okEvent();
+            });
 
-    // 创建确定和取消按钮
-    var okBtn = $('<button></button>');
-    var cancelBtn = $('<button></button>');
+            cancelBtn.on('click', function () {
+                me.removePopupWindow(mask, popupWindow);
+            });
 
-    okBtn.text('确 定');
-    cancelBtn.text('取 消');
-
-    okBtn.css({
-        padding: '8px 25px',
-        fontSize: 16,
-        color: '#f60',
-        cursor: 'pointer',
-        borderRadius: 4,
-        border: '1px solid #ccc',
-        backgroundColor: '#fff',
-        marginRight: 40
-    });
-
-    cancelBtn.css({
-        padding: '8px 25px',
-        fontSize: 16,
-        color: '#666',
-        cursor: 'pointer',
-        borderRadius: 4,
-        border: '1px solid #ccc',
-        backgroundColor: '#fff'
-    });
-
-    // 确定和取消按钮添加到弹出内容框
-    okBtn.appendTo(popupWindowContentBox);
-    cancelBtn.appendTo(popupWindowContentBox);
-
-    okBtn.on('click', function () {
-        if (jQuery.isFunction(func)) {
-            func();
+            if (me.settings.animate) {
+                popupWindow.css('top', -10);
+                popupWindow.animate({
+                    top: 150
+                }, 600, 'easeOutCubic', function () {
+                    // 鼠标点击除了弹出框本身之外的任何地方,均可退出
+                    mask.not(popupWindow).on('click', function () {
+                        me.removePopupWindow(mask, popupWindow);
+                    });
+                });
+            }
         }
-        removePopupWindow();
-    });
+    };
 
-    cancelBtn.on('click', function () {
-        removePopupWindow();
-    });
-
-
-    if (needAnimate) {
-        popupWindowBox.css('top', -10);
-        popupWindowBox.animate({
-            top: 150
-        }, 600, 'easeOutCubic', function () {
-            // 鼠标点击除了弹出框本身之外的任何地方,均可退出
-            $('div:not(#PopupWindow)').on('click', function () {
-                removePopupWindow();
-            })
-        });
+    $.fn.PopupWindow = function (options) {
+        var popupWindow = new PopupWindow(this, options);
+        popupWindow.init();
     }
-
-
-}
+})
+(jQuery);

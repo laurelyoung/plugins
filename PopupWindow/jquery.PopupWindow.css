@@ -1,0 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 62.5%;
+    font-family: Tahoma, Helvetica, Arial, "Microsoft YaHei", sans-serif;
+}
+
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.popupWindow {
+    position: fixed;
+    top: 120px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 360px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+}
+
+.popupWindowTitle {
+    color: #fff;
+    font-size: 20px;
+    padding: 8px 10px;
+    text-align: center;
+    background-color: #f60;
+    border-bottom: 1px solid #ccc;
+}
+
+.popupWindowContent {
+    color: #666;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    text-align: center;
+    background-color: #fff;
+}
+
+.btn {
+    display: inline-block;
+    width: 100px;
+    height: 34px;
+    line-height: 34px;
+    outline: none;
+    cursor: pointer;
+    color: #f60;
+    font-size: 1.6rem;
+    border: 1px solid #ccc;
+    background-color: #e8e8e8;
+    font-family: Tahoma, Helvetica, Arial, "Microsoft YaHei", sans-serif;
+}
+
+.okBtn {
+    color: #ff6600;
+    margin-right: 30px;
+}
+
+.cancelBtn {
+    color: #999999;
+}
