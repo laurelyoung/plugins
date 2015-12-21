@@ -4,62 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>滑动条</title>
-    <style type="text/css">
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        .bar {
-            margin: 50px auto;
-            width: 400px;
-            height: 20px;
-            background-color: #e8e8e8;
-            position: relative;
-        }
-
-        .completed {
-            position: absolute;
-            width: 100px;
-            height: 20px;
-            background-color: #f60;
-        }
-
-        .slider {
-            position: absolute;
-            width: 20px;
-            height: 40px;
-            left: 100px;
-            top: -10px;
-            background-color: #444;
-            -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="jquery.SliderBar.css" type="text/css"/>
     <script src="../js/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="SliderBar.js" type="text/javascript"></script>
+    <script src="jquery.SliderBar.js" type="text/javascript"></script>
 </head>
 
 <body>
-<div class="bar">
-    <div class="completed"></div>
-    <div class="slider"></div>
-</div>
 
+<button class="btn">创建滑动条</button>
 <div id="container"></div>
 <div id="percentage"></div>
 
 <script type="text/javascript">
     $(function () {
-        $('.slider').on('click', function () {
-            $(document.body).SliderBar({
-                barWidth: 1000,
-                onChanging: function (percentage, e) {
-                    $('#percentage').html((percentage * 100).toFixed(2) + '%<br/>' + e);
+        $('.btn').on('click', function () {
+            $('#container').SliderBar({
+                barWidth: 600,
+                onChanging: function (percentage) {
+                    $('#percentage').text((percentage * 100).toFixed(2) + '%');
                 },
-                onChanged: function (percentage, e) {
-                    $('#percentage').html((percentage * 100).toFixed(2) + '%<br/>' + e);
+                onChanged: function (percentage) {
+                    $('#percentage').text((percentage * 100).toFixed(2) + '%');
                 }
             });
         })

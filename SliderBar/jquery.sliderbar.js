@@ -7,7 +7,7 @@
  * Created by laurel on 15/12/20.
  */
 ;(function ($) {
-    function SliderBar(element, options) {
+    var SliderBar = function (element, options) {
         this.$element = element;
         this.default = {
             renderTo: this.$element,//滑动条添加的位置
@@ -16,9 +16,9 @@
             sliderClassName: 'slider',
             barWidth: 400,//滑动宽度
             sliderWidth: 300,//滑块宽度
-            onChanging: function () {
+            onChanging: function (percentage) {
             },// 拖拽时触发的事件
-            onChanged: function () {
+            onChanged: function (percentage) {
             }//拖拽完成时触发的时间
         };
         // 第一个参数为{},是为了避免破坏掉默认参数对象$.fn.SliderBar.default
@@ -34,36 +34,42 @@
             var $completed = $('<div></div>').attr('class', this.options.completedClassName).appendTo($bar);
             var $slider = $('<div></div>').attr('class', this.options.sliderClassName).appendTo($bar);
 
+            // 初始化拖拽事件
+            this._initDragEvent($bar, $completed, $slider);
+        },
+
+        _initDragEvent: function ($bar, $completed, $slider) {
             var me = this;
 
             var sliderPageX = 0;// 鼠标在页面上的x轴坐标
             var sliderLeft = 0;// 滑动块距离父元素左边距离
             var enableDrag = false;// 控制滑块是否移动的标识
-            var min = 0, max = $bar.width() - $slider.width();// 滑动块的移动范围
+            var min = 0,
+                max = $bar.width() - $slider.width();// 滑动块的移动范围
 
-            document.onmousedown = function (e) {
+            $(document).on('mousedown', function (e) {
                 e = e || window.event;
                 sliderLeft = parseInt($slider.css('left'));
                 sliderPageX = e.pageX;
                 enableDrag = true;
                 $slider.css('cursor', 'move');
-            };
+            });
 
-            document.onmousemove = function (e) {
+            $(document).on('mousemove', function (e) {
                 e = e || window.event;
                 if (enableDrag) {
                     // 给定滑动块的滑动区域(min ~ max),以免滑动滑到范围外
                     var l = Math.min(Math.max(e.pageX - sliderPageX + sliderLeft, min), max);
                     $slider.css('left', l + 'px');
                     $completed.css('width', l + 'px');
-                    me.options.onChanging(l / max, e);
+                    me.options.onChanging(l / max);
                 }
-            };
+            });
 
-            document.onmouseup = function (e) {
+            $(document).on('mouseup', function () {
                 enableDrag = false;
-                me.options.onChanged(parseInt($slider.css('left')) / max, e);
-            };
+                me.options.onChanged(parseInt($slider.css('left')) / max);
+            });
         }
     };
 
