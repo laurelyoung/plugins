@@ -14,7 +14,7 @@ $(selector).SliderBar(options);
 
 ## Options
 
-```
+``` javascript
 renderTo: this.$element,         //滑动条添加的位置
 barClassName: 'bar',             //全部滑动条css样式
 completedClassName: 'completed', //已完成滑动条css样式
@@ -26,7 +26,7 @@ onChanged: function() {}         //拖拽完成时触发的事件
 ```
 
 ## Example
-```
+``` javascript
 $(function () {
     $('.btn').on('click', function () {
         $('#container').SliderBar({
@@ -59,7 +59,7 @@ $(selector).SliderBar(options);
 
 ## Options
 
-```
+``` javascript
 renderTo: $(document.body),
 classNames: {                                            // 样式对象
     maskClassName: 'mask',                               // 遮罩层class
@@ -77,7 +77,7 @@ okEvent: function () {                                   // 确定按钮按下�
 ```
 
 ## Example
-```
+``` javascript
 $(function(){
     $('.btn').on('click', function(){
         $('#container').PopupWindow({
@@ -104,7 +104,7 @@ $(selector).CircleProgressBar(options);
 
 ## Options
 
-```
+``` javascript
 x: 70,                           // 圆心x坐标
 y: 70,                           // 圆心y坐标
 radius: 50,                      // 圆的半径
