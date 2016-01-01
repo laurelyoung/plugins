@@ -7,17 +7,18 @@
     <script src="jquery.CircleProgressBar.js" type="text/javascript"></script>
 </head>
 <body>
-<canvas id="myCanvas" width="140" height="140"
+<canvas id="myCanvas" width="200" height="200"
         style="display: block;margin: 30px auto;border: 1px solid #ccc;"></canvas>
 
 <script type="text/javascript">
     $(function () {
         $('#myCanvas').CircleProgressBar({
-            // x: 80,
-            // y: 80,
-            // radius: 60,
-            // barWidth: 20,
-            // animate: false
+            x: 80,
+            y: 80,
+            radius: 60,
+            barWidth: 20,
+            value: 60,
+            animate: true
         });
     });
 </script>

@@ -1,9 +1,12 @@
+/**
+ * 创建圆形进度条
+ * Created by laurel on 16/01/01.
+ */
 ;
 (function($) {
 
     var CircleProgressBar = function(element, options) {
         this.default = {
-            id: element.attr('id'),
             x: 70,
             y: 70,
             radius: 50,
@@ -22,7 +25,6 @@
 
     CircleProgressBar.prototype = {
         init: function() {
-            this.id = this.settings.id; // 画布ID
             this.x = this.settings.x; // 圆心x坐标
             this.y = this.settings.y; // 圆心y坐标
             this.radius = this.settings.radius; // 圆的半径
@@ -32,6 +34,7 @@
             this.value = this.settings.value; // 进度条的值
             this.animate = this.settings.animate; // 是否动画
 
+            this.id = this.$element.attr('id');
             var myCanvas = document.getElementById(this.id); // canvas画布
             this.ctx = myCanvas.getContext('2d'); // canvas上下文
             this.width = myCanvas.width; // canvas画布的宽度
